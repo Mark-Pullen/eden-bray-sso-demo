@@ -1,0 +1,34 @@
+:root {
+  --ebh-blue: #002A52;
+  --ebh-red: #DA1A2C;
+  --ebh-white: #FFFFFF;
+  --ebh-grey-light: #F4F4F4;
+}
+
+body {
+  background-color: var(--ebh-grey-light);
+  font-family: 'Segoe UI', sans-serif;
+  color: var(--ebh-blue);
+  margin: 0;
+}
+
+header {
+  background-color: var(--ebh-blue);
+  color: var(--ebh-white);
+  padding: 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+button {
+  background-color: var(--ebh-red);
+  color: var(--ebh-white);
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #b31725;
+}
