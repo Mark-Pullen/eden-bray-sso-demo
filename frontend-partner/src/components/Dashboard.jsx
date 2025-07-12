@@ -14,7 +14,7 @@ function Dashboard() {
       const parsed = JSON.parse(saved);
       setUser(parsed);
 
-      axios.get(`http://localhost:4000/points/${parsed.customer_id}`)
+      axios.get(`https://sso-backend-k5ps.onrender.com/points/${parsed.customer_id}`)
         .then((res) => setPoints(res.data.points))
         .catch(() => setPoints(null))
         .finally(() => setLoading(false));
@@ -22,7 +22,7 @@ function Dashboard() {
   }, []);
 
   const handleLaunch = async () => {
-    const res = await axios.post('http://localhost:4000/sso-login', user);
+    const res = await axios.post('https://sso-backend-k5ps.onrender.com/sso-login', user);
     window.location.href = res.data.redirect_url;
   };
 
