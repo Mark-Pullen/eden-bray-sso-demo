@@ -8,8 +8,16 @@ app.use(express.json());
 
 // Optional root route for quick check
 app.get('/', (req, res) => {
-  res.send('SSO Backend is running.');
-});
+  res.send(`
+  <h1>🧩 Simulated SSO Backend for Tradelink Loyalty</h1>
+  <p>This service simulates a partner SSO Identity Provider used to access the Tradelink Loyalty Platform.</p>
+  <ul>
+    <li><strong>POST /sso-login</strong>: Simulates SSO login and returns a redirect URL with token</li>
+    <li><strong>GET /points/:customerId</strong>: Returns a dummy points balance</li>
+  </ul>
+  <p>To test the full SSO flow, start from the <strong>Partner Portal frontend</strong>.</p>
+  <p><a href="http://localhost:5173" target="_blank">➡️ Launch Partner Portal (Localhost)</a></p>
+`);
 
 // SSO login POST endpoint
 app.post('/sso-login', (req, res) => {
