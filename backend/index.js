@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
       <li><strong>GET /points/:customerId</strong>: Returns a dummy points balance</li>
     </ul>
     <p>To test the full SSO flow, start from the <strong>Partner Portal frontend</strong>.</p>
-    <p><a href="https://frontend-partner-git-mark-pullens-projects.vercel.app" target="_blank">➡️ Launch Partner Portal</a></p>
+    <p><a href="https://frontend-partner.vercel.app/" target="_blank">➡️ Launch Partner Portal</a></p>
   `);
 });
 
