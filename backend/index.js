@@ -39,7 +39,7 @@ app.post('/sso-login', (req, res) => {
 
   // Redirect to deployed loyalty frontend
   res.json({
-    redirect_url: `https://frontend-loyalty-git-mark-pullens-projects.vercel.app/?token=${token}`,
+    redirect_url: `https://frontend-loyalty.vercel.app//?token=${token}`,
   });
 });
 
