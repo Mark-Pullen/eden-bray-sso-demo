@@ -6,35 +6,21 @@ const PORT = process.env.PORT || 4000;
 app.use(cors());
 app.use(express.json());
 
-// ✅ Root route with basic HTML documentation
+// Optional root route for info
 app.get('/', (req, res) => {
   res.send(`
     <h1>🧩 Simulated SSO Backend for Tradelink Loyalty</h1>
     <p>This service simulates a partner SSO Identity Provider used to access the Tradelink Loyalty Platform.</p>
-    
-    <h2>Available Endpoints</h2>
     <ul>
-      <li><strong>POST /sso-login</strong><br/>
-          Accepts JSON with <code>customer_id</code>, <code>email</code>, and <code>member_type</code>, and returns a tokenized redirect URL.</li>
-      <li><strong>GET /points/:customerId</strong><br/>
-          Returns a simulated points balance for the given customer ID.</li>
+      <li><strong>POST /sso-login</strong>: Simulates SSO login and returns a redirect URL with token</li>
+      <li><strong>GET /points/:customerId</strong>: Returns a dummy points balance</li>
     </ul>
-
-    <h2>How to Test</h2>
-    <ol>
-      <li>Start the <strong>Partner Portal frontend</strong> (Eden Bray) on <code>http://localhost:5173</code> or deployed link.</li>
-      <li>Select a trade and log in.</li>
-      <li>Click "Visit Tradelink Loyalty" to test SSO token handoff.</li>
-    </ol>
-
-    <p><a href="http://localhost:5173" target="_blank">➡️ Open Partner Portal</a></p>
-
-    <hr/>
-    <p style="font-size: 12px; color: #666;">This service is for development/testing purposes only.</p>
+    <p>To test the full SSO flow, start from the <strong>Partner Portal frontend</strong>.</p>
+    <p><a href="https://frontend-partner-git-mark-pullens-projects.vercel.app" target="_blank">➡️ Launch Partner Portal</a></p>
   `);
 });
 
-// ✅ Simulate SSO login + generate redirect URL with token
+// SSO login POST endpoint
 app.post('/sso-login', (req, res) => {
   const { customer_id, email, member_type } = req.body;
 
@@ -51,13 +37,16 @@ app.post('/sso-login', (req, res) => {
     })
   ).toString('base64');
 
-  res.json({ redirect_url: `http://localhost:5174/?token=${token}` });
+  // Redirect to deployed loyalty frontend
+  res.json({
+    redirect_url: `https://frontend-loyalty-git-mark-pullens-projects.vercel.app/?token=${token}`,
+  });
 });
 
-// ✅ Simulated loyalty points endpoint
+// Simulated points lookup
 app.get('/points/:customerId', (req, res) => {
   const { customerId } = req.params;
-  res.json({ points: 5000 }); // You can randomize this if needed
+  res.json({ points: 5000 });
 });
 
 app.listen(PORT, () => console.log(`SSO Server running on port ${PORT}`));
