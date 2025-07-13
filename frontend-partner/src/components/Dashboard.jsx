@@ -3,6 +3,14 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+const memberMap = {
+  Bricklayer: 'Y',
+  Plumber: 'Y',
+  Carpenter: 'N',
+  Electrician: 'Y',
+  Plasterer: 'N',
+};
+
 function Dashboard() {
   const [user, setUser] = useState(null);
   const [points, setPoints] = useState(null);
@@ -15,7 +23,7 @@ function Dashboard() {
     if (saved) {
       const parsed = JSON.parse(saved);
       setUser(parsed);
-      setMemberFlag(parsed.member === 'Y' ? 'Y' : 'N');
+      setMemberFlag(memberMap[parsed.member_type] || 'N');
     }
   }, []);
 
