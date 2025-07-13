@@ -19,7 +19,7 @@ function App() {
   }, []);
 
   const handleBack = () => {
-    window.location.href = 'https://frontend-partner-git-main-mark-pullen.vercel.app'; // Update with production if needed
+    window.location.href = 'https://frontend-partner.vercel.app/'; // Update with production if needed
   };
 
   if (!userData) {
