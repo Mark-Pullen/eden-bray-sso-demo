@@ -19,16 +19,11 @@ function App() {
   }, []);
 
   const handleBack = () => {
-    window.location.href = 'https://frontend-partner.vercel.app/'; // Update with production if needed
+    window.location.href = 'https://frontend-partner.vercel.app';
   };
 
-  if (!userData) {
-    return <h2 style={styles.message}>No token received. Please log in via partner portal.</h2>;
-  }
-
-  if (userData.error) {
-    return <h2 style={styles.message}>Invalid token. Please try logging in again.</h2>;
-  }
+  if (!userData) return <h2 style={styles.message}>No token received. Please log in via partner portal.</h2>;
+  if (userData.error) return <h2 style={styles.message}>Invalid token. Please try logging in again.</h2>;
 
   return (
     <div style={styles.container}>
@@ -38,7 +33,7 @@ function App() {
         <p><strong>Email:</strong> {userData.email}</p>
         <p><strong>Member Type:</strong> {userData.member_type}</p>
         <p><strong>Status:</strong> {userData.member_flag === 'Y' ? 'Active Member' : 'Not Eligible'}</p>
-        <p>Welcome to the program, check out your rewards.</p>
+        <p>Welcome to the program. You can now redeem rewards and view your loyalty history.</p>
         <button style={styles.button} onClick={handleBack}>⬅️ Return to Eden Bray Portal</button>
       </div>
     </div>
@@ -63,13 +58,13 @@ const styles = {
     maxWidth: '500px',
   },
   title: {
-    color: '#00205B', // Eden Bray blue
+    color: '#00205B',
     marginBottom: '20px',
   },
   button: {
     marginTop: '20px',
     padding: '10px 20px',
-    backgroundColor: '#FBC700', // Eden Bray yellow
+    backgroundColor: '#FBC700',
     color: '#00205B',
     fontWeight: 'bold',
     fontSize: '16px',
@@ -81,8 +76,8 @@ const styles = {
     padding: '40px',
     textAlign: 'center',
     fontFamily: 'sans-serif',
-    color: '#cb2026', // Error red
-  },
+    color: '#cb2026',
+  }
 };
 
 export default App;
