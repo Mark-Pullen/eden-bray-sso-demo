@@ -15,20 +15,19 @@ function Dashboard() {
     if (saved) {
       const parsed = JSON.parse(saved);
       setUser(parsed);
+      setMemberFlag(parsed.member === 'Y' ? 'Y' : 'N');
     }
   }, []);
 
   const handlePointsLookup = async () => {
-    if (!user) return;
+    if (!user || memberFlag !== 'Y') return;
     setLoading(true);
     try {
       const res = await axios.get(`https://sso-backend-k5ps.onrender.com/points/${user.customer_id}`);
       setPoints(res.data.points);
-      setMemberFlag(res.data.member_flag);
     } catch (error) {
       console.error('Points lookup failed:', error);
       setPoints(null);
-      setMemberFlag(null);
     } finally {
       setLoading(false);
     }
@@ -50,20 +49,24 @@ function Dashboard() {
     <div style={styles.container}>
       <h2 style={styles.title}>Welcome, {user.member_type}</h2>
 
-      <button style={styles.lookupButton} onClick={handlePointsLookup} disabled={loading}>
-        {loading ? 'Looking up points...' : '🔍 Simulate Points Lookup'}
-      </button>
+      {memberFlag === 'Y' ? (
+        <>
+          <button style={styles.lookupButton} onClick={handlePointsLookup} disabled={loading}>
+            {loading ? 'Looking up points...' : '🔍 Simulate Points Lookup'}
+          </button>
 
-      {memberFlag && (
-        <div style={styles.infoBox}>
-          <p><strong>Member Status:</strong> {memberFlag === 'Y' ? 'Yes' : 'No'}</p>
-          {memberFlag === 'Y' && (
-            <>
-              <p><strong>Points:</strong> {points?.toLocaleString() ?? 'N/A'}</p>
+          {points !== null && (
+            <div style={styles.infoBox}>
+              <p><strong>Member Status:</strong> Yes</p>
+              <p><strong>Points:</strong> {points.toLocaleString()}</p>
               <button style={styles.launchButton} onClick={handleLaunch}>Go to Loyalty Portal</button>
-            </>
+            </div>
           )}
-          {memberFlag !== 'Y' && <p>You are not eligible for the loyalty program.</p>}
+        </>
+      ) : (
+        <div style={styles.infoBox}>
+          <p><strong>Member Status:</strong> No</p>
+          <p>You are not eligible for the loyalty program.</p>
         </div>
       )}
 
