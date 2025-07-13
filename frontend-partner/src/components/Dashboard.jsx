@@ -63,13 +63,11 @@ function Dashboard() {
             {loading ? 'Looking up points...' : '🔍 Simulate Points Lookup'}
           </button>
 
-          {points !== null && (
-            <div style={styles.infoBox}>
-              <p><strong>Member Status:</strong> Yes</p>
-              <p><strong>Points:</strong> {points.toLocaleString()}</p>
-              <button style={styles.launchButton} onClick={handleLaunch}>Go to Loyalty Portal</button>
-            </div>
-          )}
+          <div style={styles.infoBox}>
+            <p><strong>Member Status:</strong> Yes</p>
+            {points !== null && <p><strong>Points:</strong> {points.toLocaleString()}</p>}
+            <button style={styles.launchButton} onClick={handleLaunch}>Go to Loyalty Portal</button>
+          </div>
         </>
       ) : (
         <div style={styles.infoBox}>
