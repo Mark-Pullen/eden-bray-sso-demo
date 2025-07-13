@@ -6,65 +6,81 @@ const PORT = process.env.PORT || 4000;
 app.use(cors());
 app.use(express.json());
 
-// Root route with SVG diagram and explanation
+// Serve documentation and diagram on root
 app.get('/', (req, res) => {
   res.send(`
     <html>
       <head>
         <title>Simulated SSO Backend</title>
         <style>
-          body { font-family: sans-serif; text-align: center; padding: 40px; }
-          h1 { color: #00205B; }
-          code { background: #f3f3f3; padding: 2px 6px; border-radius: 4px; }
+          body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #333;
+          }
+          h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: #1a1a1a;
+          }
+          p {
+            max-width: 600px;
+            text-align: center;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+          }
+          svg {
+            max-width: 100%;
+            height: auto;
+          }
         </style>
       </head>
       <body>
         <h1>🔐 Simulated SSO Backend for Tradelink Loyalty</h1>
         <p>This backend simulates the Identity Provider in a secure SSO workflow, connecting a Partner Portal to the Tradelink Loyalty Platform.</p>
-
-        <svg viewBox="0 0 900 500" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="max-width: 800px; display: block; margin: 30px auto;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 160">
           <style>
-            .box { fill: #fefefe; stroke: #ccc; stroke-width: 2; rx: 10; ry: 10; }
-            .title { font: bold 16px sans-serif; fill: #00205B; }
-            .text { font: 14px sans-serif; fill: #333; }
-            .arrow { stroke: #cb2026; stroke-width: 2; marker-end: url(#arrowhead); }
+            .box { fill: #fff; stroke: #ccc; stroke-width: 1.5; }
+            .label { font: 600 12px sans-serif; fill: #000; }
+            .sub { font: 400 11px sans-serif; fill: #555; }
+            .arrow { stroke: #cb2026; stroke-width: 1.5; marker-end: url(#arrowhead); }
+            .note { font: 400 10px sans-serif; fill: #cb2026; }
           </style>
           <defs>
             <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
               <polygon points="0 0, 10 3.5, 0 7" fill="#cb2026" />
             </marker>
           </defs>
+          <rect x="30" y="40" width="150" height="60" rx="8" class="box"/>
+          <text x="105" y="62" text-anchor="middle" class="label">Partner Portal</text>
+          <text x="105" y="78" text-anchor="middle" class="sub">edenbraehomes.com.au</text>
 
-          <rect class="box" x="50" y="50" width="200" height="100"/>
-          <text class="title" x="150" y="75" text-anchor="middle">Partner Portal</text>
-          <text class="text" x="150" y="100" text-anchor="middle">edenbraehomes.com.au</text>
+          <rect x="250" y="40" width="170" height="60" rx="8" class="box"/>
+          <text x="335" y="62" text-anchor="middle" class="label">Simulated SSO Backend</text>
+          <text x="335" y="78" text-anchor="middle" class="sub">/sso-login + /points</text>
 
-          <rect class="box" x="350" y="50" width="200" height="100"/>
-          <text class="title" x="450" y="75" text-anchor="middle">Simulated SSO Backend</text>
-          <text class="text" x="450" y="100" text-anchor="middle">/sso-login + /points</text>
+          <rect x="500" y="40" width="150" height="60" rx="8" class="box"/>
+          <text x="575" y="62" text-anchor="middle" class="label">Tradelink Loyalty</text>
+          <text x="575" y="78" text-anchor="middle" class="sub">frontend-loyalty.vercel.app</text>
 
-          <rect class="box" x="650" y="50" width="200" height="100"/>
-          <text class="title" x="750" y="75" text-anchor="middle">Tradelink Loyalty</text>
-          <text class="text" x="750" y="100" text-anchor="middle">frontend-loyalty.vercel.app</text>
+          <!-- Arrows -->
+          <line x1="180" y1="70" x2="250" y2="70" class="arrow"/>
+          <text x="215" y="65" text-anchor="middle" class="note">1. POST /sso-login</text>
 
-          <line class="arrow" x1="250" y1="100" x2="350" y2="100"/>
-          <line class="arrow" x1="550" y1="100" x2="650" y2="100"/>
-          <line class="arrow" x1="650" y1="130" x2="550" y2="130"/>
-          <line class="arrow" x1="350" y1="130" x2="250" y2="130"/>
+          <line x1="420" y1="70" x2="500" y2="70" class="arrow"/>
+          <text x="460" y="65" text-anchor="middle" class="note">2. Redirect with token</text>
 
-          <text class="text" x="300" y="90" text-anchor="middle">1. POST /sso-login</text>
-          <text class="text" x="600" y="90" text-anchor="middle">2. Redirect with token</text>
-          <text class="text" x="600" y="145" text-anchor="middle">3. Fetch /points</text>
-          <text class="text" x="300" y="145" text-anchor="middle">4. Display points</text>
+          <line x1="500" y1="100" x2="250" y2="100" class="arrow"/>
+          <text x="375" y="95" text-anchor="middle" class="note">3. Fetch /points</text>
+
+          <line x1="250" y1="130" x2="30" y2="130" class="arrow"/>
+          <text x="140" y="125" text-anchor="middle" class="note">4. Display points</text>
         </svg>
-
-        <p style="margin-top: 30px;">
-          <strong>Endpoints:</strong><br/>
-          <code>POST /sso-login</code> — Simulates login and returns token redirect<br/>
-          <code>GET /points/:customerId</code> — Returns mock loyalty points<br/>
-        </p>
-
-        <p>💡 To test the flow, visit the <a href="https://frontend-partner.vercel.app" target="_blank">Partner Portal</a>.</p>
       </body>
     </html>
   `);
@@ -87,17 +103,13 @@ app.post('/sso-login', (req, res) => {
     })
   ).toString('base64');
 
-  res.json({
-    redirect_url: `https://frontend-loyalty.vercel.app/?token=${token}`,
-  });
+  res.json({ redirect_url: `https://frontend-loyalty.vercel.app/?token=${token}` });
 });
 
-// Dummy points API
+// Points endpoint
 app.get('/points/:customerId', (req, res) => {
   const { customerId } = req.params;
-  res.json({ points: 5000 }); // Simulated loyalty points
+  res.json({ points: 5000 });
 });
 
-app.listen(PORT, () =>
-  console.log(`✅ SSO Backend running on http://localhost:${PORT}`)
-);
+app.listen(PORT, () => console.log(`SSO Server running on port ${PORT}`));
