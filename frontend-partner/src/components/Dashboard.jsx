@@ -1,3 +1,4 @@
+// --- frontend-partner/src/components/Dashboard.jsx ---
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -5,7 +6,8 @@ import { useNavigate } from 'react-router-dom';
 function Dashboard() {
   const [user, setUser] = useState(null);
   const [points, setPoints] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [memberFlag, setMemberFlag] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -13,13 +15,24 @@ function Dashboard() {
     if (saved) {
       const parsed = JSON.parse(saved);
       setUser(parsed);
-
-      axios.get(`https://sso-backend-k5ps.onrender.com/points/${parsed.customer_id}`)
-        .then((res) => setPoints(res.data.points))
-        .catch(() => setPoints(null))
-        .finally(() => setLoading(false));
     }
   }, []);
+
+  const handlePointsLookup = async () => {
+    if (!user) return;
+    setLoading(true);
+    try {
+      const res = await axios.get(`https://sso-backend-k5ps.onrender.com/points/${user.customer_id}`);
+      setPoints(res.data.points);
+      setMemberFlag(res.data.member_flag);
+    } catch (error) {
+      console.error('Points lookup failed:', error);
+      setPoints(null);
+      setMemberFlag(null);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleLaunch = async () => {
     const res = await axios.post('https://sso-backend-k5ps.onrender.com/sso-login', user);
@@ -36,16 +49,24 @@ function Dashboard() {
   return (
     <div style={styles.container}>
       <h2 style={styles.title}>Welcome, {user.member_type}</h2>
-      {loading ? (
-        <p>Loading...</p>
-      ) : points === null ? (
-        <button style={styles.button} onClick={handleLaunch}>Visit Your Tradelink Loyalty</button>
-      ) : (
-        <>
-          <p>You have <strong>{points.toLocaleString()}</strong> points.</p>
-          <button style={styles.button} onClick={handleLaunch}>Go to Loyalty Portal</button>
-        </>
+
+      <button style={styles.lookupButton} onClick={handlePointsLookup} disabled={loading}>
+        {loading ? 'Looking up points...' : '🔍 Simulate Points Lookup'}
+      </button>
+
+      {memberFlag && (
+        <div style={styles.infoBox}>
+          <p><strong>Member Status:</strong> {memberFlag === 'Y' ? 'Yes' : 'No'}</p>
+          {memberFlag === 'Y' && (
+            <>
+              <p><strong>Points:</strong> {points?.toLocaleString() ?? 'N/A'}</p>
+              <button style={styles.launchButton} onClick={handleLaunch}>Go to Loyalty Portal</button>
+            </>
+          )}
+          {memberFlag !== 'Y' && <p>You are not eligible for the loyalty program.</p>}
+        </div>
       )}
+
       <br /><br />
       <button style={styles.logout} onClick={handleLogout}>Logout</button>
     </div>
@@ -66,7 +87,25 @@ const styles = {
   title: {
     color: '#cb2026',
   },
-  button: {
+  lookupButton: {
+    padding: '10px 20px',
+    fontSize: 16,
+    backgroundColor: '#0070f3',
+    color: '#fff',
+    border: 'none',
+    borderRadius: 4,
+    cursor: 'pointer',
+    marginBottom: 20,
+  },
+  infoBox: {
+    backgroundColor: '#f9f9f9',
+    padding: '15px',
+    borderRadius: 6,
+    border: '1px solid #eee',
+    marginTop: 20,
+  },
+  launchButton: {
+    marginTop: 10,
     padding: '10px 20px',
     fontSize: 16,
     backgroundColor: '#cb2026',
@@ -76,7 +115,7 @@ const styles = {
     cursor: 'pointer',
   },
   logout: {
-    marginTop: 20,
+    marginTop: 30,
     padding: '6px 12px',
     backgroundColor: '#888',
     color: '#fff',
